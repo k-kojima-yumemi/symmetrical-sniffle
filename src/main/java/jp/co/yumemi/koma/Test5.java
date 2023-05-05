@@ -17,9 +17,9 @@ public class Test5 {
             System.out.println("Test5 access static class end");
         } catch (NoClassDefFoundError error) {
             error.printStackTrace(System.err);
+            // Wait for stack trace printed
+            Thread.sleep(500);
         }
-        // Wait for stack trace printed
-        Thread.sleep(500);
 
         System.out.println("Test5 access instance class start");
         System.out.println("Just access with .class");
@@ -28,9 +28,24 @@ public class Test5 {
         var c21 = Class.forName("jp.co.yumemi.koma.Test5HolderInstance",
             false, ClassLoader.getSystemClassLoader());
         System.out.println("Access via Class.forName, initialize=true");
-        var c22 = Class.forName("jp.co.yumemi.koma.Test5HolderInstance",
-            true, ClassLoader.getSystemClassLoader());
-        System.out.println("Test5 access instance class end");
+        try {
+            var c22 = Class.forName("jp.co.yumemi.koma.Test5HolderInstance",
+                true, ClassLoader.getSystemClassLoader());
+            System.out.println("Test5 access instance class end");
+        } catch (NoClassDefFoundError error) {
+            error.printStackTrace(System.err);
+            Thread.sleep(500);
+        }
+
+        System.out.println("Test5 access instance class2 start");
+        try {
+            var c22 = Class.forName("jp.co.yumemi.koma.Test5HolderInstance2",
+                true, ClassLoader.getSystemClassLoader());
+            System.out.println("Test5 access instance class2 end");
+        } catch (NoClassDefFoundError error) {
+            error.printStackTrace(System.err);
+            Thread.sleep(500);
+        }
     }
 }
 
@@ -42,6 +57,17 @@ class Test5HolderInstance {
 
     {
         System.out.println("Test5HolderInstance initialize");
+    }
+}
+
+class Test5HolderInstance2 {
+    final Addition<Integer> integerAddition = ImplementNotExistInterface.returnAdditionInstance();
+
+    static void doNothing() {
+    }
+
+    static {
+        System.out.println("Test5HolderInstance2 static initialize");
     }
 }
 
